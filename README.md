@@ -147,69 +147,7 @@ Se probó arrancando con 1.500–4.000, 2.500–8.000 y 6.000–9.000 kits. B, C
 4. **Lo más importante en una crisis es actualizar los datos:** la misma fórmula, recalculada con los tiempos reales, recupera casi todo el control ($72 M en vez de $86 M).
 5. **Mirar la posición de inventario (bodega + en camino), no solo la bodega:** es lo que permite que B, C y D se autocorrijan.
 
----
 
-## 8. Supuestos y limitaciones (decirlos antes de que los pregunten)
 
-- Datos ficticios, aunque con órdenes de magnitud realistas.
-- **Ventas perdidas:** si no hay producto, el cliente se va (no hay pedidos pendientes / *backorders*).
-- La demanda de un día no depende de la del día anterior (independencia).
-- No se modela la capacidad del contenedor ni descuentos por volumen.
-- No se cobra costo de capital por la mercancía que viene en el barco (inventario en tránsito). Agregarlo subiría todos los costos casi por igual, porque el inventario en tránsito ≈ demanda × lead time (Ley de Little) no depende de la política.
-- Un solo producto. Una importadora real maneja cientos (se podría extender con una clasificación ABC).
 
----
 
-## 9. Conceptos que deben saber explicar
-
-| Concepto | En palabras simples |
-|---|---|
-| **Lead time** | Días desde que se hace el pedido hasta que llega a bodega |
-| **EOQ** (cantidad económica de pedido) | El tamaño de pedido que equilibra el costo de pedir muchas veces contra el de guardar mucho |
-| **Punto de reorden (ROP)** | El nivel en el que hay que volver a pedir para que lo que queda alcance mientras llega el barco |
-| **Stock de seguridad (SS)** | Colchón extra por si el barco se demora o se vende más de lo normal |
-| **Nivel de servicio (ciclo)** | Probabilidad de NO quedarse sin stock mientras llega un pedido (95 % → z = 1,645) |
-| **Fill rate** | % de la demanda total que sí se atendió |
-| **Posición de inventario** | Bodega + lo que viene en camino. Es lo que se mira para decidir |
-| **Monte Carlo** | Repetir la simulación muchas veces con números aleatorios y analizar los promedios |
-| **Réplica** | Una repetición completa del año simulado |
-| **Intervalo de confianza 95 %** | Rango donde está el costo promedio verdadero con 95 % de confianza: media ± 1,96·s/√n |
-| **Números aleatorios comunes** | Todas las políticas se prueban con el mismo futuro para compararlas de forma justa (reducción de varianza) |
-| **Periodo de calentamiento** | Días iniciales que se simulan pero no se cuentan, para que el arranque no sesgue |
-| **Sesgo de inicialización** | Si todas las réplicas arrancan igual, el resultado depende de ese arranque. Por eso el inventario inicial es aleatorio |
-| **Verificación vs validación** | Verificar = el programa hace lo que decimos. Validar = el modelo se parece a la realidad o a la teoría |
-| **Análisis de sensibilidad** | Mover un parámetro y ver cómo cambia el resultado |
-| **Prueba de estrés** | Simular un escenario malo para ver qué política aguanta |
-
----
-
-## 10. Preguntas probables del profe
-
-**¿Por qué Python y no Arena?** Python permite separar el modelo en módulos claros, correr 1.000 réplicas en segundos y hacer los análisis estadísticos y gráficas en el mismo programa. La lógica es la misma de Arena (entidades, atributos, decisiones, réplicas) y la tabla de la sección 2 muestra la equivalencia.
-
-**¿Cómo saben que el modelo está bien?** `validacion.py` hace 4 pruebas: (1) balance de unidades: inicial + recibido = vendido + final; (2) la demanda simulada tiene la media esperada (error 0,01 %); (3) el lead time simulado coincide con el teórico (error 0,04 %); (4) **sin aleatoriedad, la simulación da lo mismo que la fórmula del EOQ** (error < 1 %).
-
-**¿Por qué 1.000 réplicas?** Con 1.000 el intervalo de confianza del costo de C queda en ± $0,4 M, suficientemente estrecho para separar las políticas. Las diferencias entre políticas son de $5 M o más.
-
-**¿Por qué el lead time es una suma de distribuciones?** Porque cada etapa tiene una incertidumbre distinta y así se puede explicar de dónde sale cada día de retraso. Además permite simular la crisis cambiando solo el tránsito y las inspecciones.
-
-**¿Por qué triangular?** Se usa cuando no hay muchos datos pero se conocen el mínimo, el máximo y el valor más probable (por ejemplo, preguntándole a la naviera o al agente de aduanas).
-
-**¿Por qué el inventario inicial es aleatorio?** Si todas las réplicas arrancan con el mismo inventario, quedan en la misma fase del ciclo de pedidos y el resultado depende de esa suposición (sesgo de inicialización). El experimento 4 muestra que con el arranque aleatorio B, C y D dan casi lo mismo sin importar el rango.
-
-**¿Por qué A sale tan bien en ventas perdidas?** Porque arranca con un colchón grande y nunca lo ajusta, y paga ese colchón todo el año ($51 M solo en mantener). El experimento 4 muestra que su resultado depende de cómo arranca.
-
-**¿Por qué el óptimo en crisis sale en el extremo (99,99 %)?** Porque la política se diseñó para un barco de 58 días y ahora tarda 72. Ningún colchón "normal" alcanza. La solución correcta no es subir el z indefinidamente sino **recalcular la política con los datos nuevos** ($72,2 M).
-
-**¿Qué es la comparación pareada?** Como todas las políticas vieron el mismo futuro, se resta el costo de cada una réplica por réplica y se saca el intervalo de esa diferencia. Si no contiene el cero, la diferencia es real y no suerte.
-
----
-
-## 11. Sugerencia para repartir la sustentación
-
-Como pueden escoger a cualquiera, **todos deben entender las secciones 3, 5 y 7**. Para la exposición:
-1. Problema y caso (secciones 1 y 4) + gráfica `01_entradas_aleatorias.png`
-2. Módulos y secuencia lógica (secciones 2 y 3) + demo de `app.py`
-3. Políticas y fórmulas (sección 5) + gráfica `02_trayectorias_inventario.png`
-4. Resultados y riesgo (sección 6) + gráficas `03` y `04`
-5. Sensibilidad, crisis y conclusiones (secciones 6 y 7) + gráficas `05` y `06`
