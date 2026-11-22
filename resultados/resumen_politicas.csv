@@ -1,0 +1,5 @@
+﻿Política,Costo total (M COP),IC 95% inf (M COP),IC 95% sup (M COP),Mantener (M COP),Pedir (M COP),Faltantes (M COP),Fill rate (%),Días con faltante (%),Ventas perdidas (kits),Inventario prom. (kits),Pedidos/año,Prob. de perder >500 kits (%)
+A. Pedido fijo trimestral,99.576,98.489,100.662,51.215,48.0,0.361,99.938,0.077,9.018,4552.448,4.0,0.5
+B. EOQ + ROP sin SS,74.744,74.122,75.366,32.124,30.18,12.44,97.877,2.226,310.998,2855.46,2.515,23.9
+C. EOQ + ROP + SS 95%,69.382,68.966,69.798,36.105,31.476,1.8,99.693,0.34,45.01,3209.378,2.623,0.4
+"D. Revisión trimestral (T,S) 95%",74.575,74.375,74.776,25.151,48.0,1.424,99.757,0.304,35.611,2235.634,4.0,0.2
